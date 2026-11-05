@@ -33,7 +33,7 @@ function Page() {
         </div>
 
         <div className="mt-16 border-t border-white/[0.08] pt-6 text-xs text-slate-600">
-          © {new Date().getFullYear()} KnowSphere AI. All rights reserved.
+          {/* © {new Date().getFullYear()} KnowSphere AI. All rights reserved. */}
         </div>
       </div>
     </main>
