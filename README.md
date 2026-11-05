@@ -20,6 +20,21 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Google sign-in
+
+Set `DATABASE_URL`, `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, and
+`AUTH_TRUST_HOST` in `.env`. Environment values are validated by
+`src/lib/config.ts`. Set `AUTH_TRUST_HOST=true` only when your app receives host
+headers from a trusted source (such as your configured reverse proxy). Create a
+Google OAuth client and add
+`http://localhost:3000/api/auth/callback/google` as an authorized redirect URI.
+
+The Prisma contract defines the Auth.js user, account, session, and verification
+token tables. After configuring PostgreSQL, run `npx prisma contract emit` and
+apply the contract to the database (`npx prisma db init` for an initial schema)
+before starting the app. Unauthenticated visitors to the core workspace are
+redirected to `/login`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
