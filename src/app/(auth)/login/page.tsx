@@ -1,7 +1,5 @@
-import React from "react";
+import { LoginCard } from "@/features/auth/components/login-card";
 
-function page() {
-  return <div>This is Login Page</div>;
+export default function LoginPage() {
+  return <LoginCard />;
 }
-
-export default page;
