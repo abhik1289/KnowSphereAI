@@ -8,6 +8,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  workspaces    Workspace[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now())
 }
@@ -46,4 +47,74 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Workspace {
+  id            String         @id @onCreate(uuid())
+  name          String
+  description   String?
+  icon          String?
+  color         String?
+  ownerId       String
+  owner         User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  documents     Document[]
+  conversations Conversation[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+
+  @@index([ownerId, updatedAt])
+}
+
+model Document {
+  id               String    @id @onCreate(uuid())
+  workspaceId      String
+  workspace        Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  originalName     String
+  storageKey       String
+  imagekitFileId   String    @unique
+  mimeType         String
+  size             Int
+  checksum         String
+  processingStatus String    @default("ready")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @default(now())
+
+  @@unique([workspaceId, checksum])
+  @@index([workspaceId, createdAt])
+}
+
+model Conversation {
+  id          String    @id @onCreate(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  title       String
+  messages    Message[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+
+  @@index([workspaceId, updatedAt])
+}
+
+model Message {
+  id             String       @id @onCreate(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String
+  content        String
+  requestId      String?      @unique
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+model StorageCleanup {
+  id             String   @id @onCreate(uuid())
+  ownerId        String
+  imagekitFileId String   @unique
+  attempts       Int      @default(0)
+  nextAttemptAt  DateTime @default(now())
+  lastError      String?
+  createdAt      DateTime @default(now())
+
+  @@index([ownerId, nextAttemptAt])
 }

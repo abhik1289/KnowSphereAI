@@ -18,3 +18,12 @@ export function getDatabaseEnv() {
 export function getAuthEnv() {
   return authEnvSchema.parse(process.env);
 }
+
+const imageKitEnvSchema = z.object({
+  IMAGEKIT_PRIVATE_KEY: z.string().min(1, "IMAGEKIT_PRIVATE_KEY is required"),
+  IMAGEKIT_URL_ENDPOINT: z.string().url("IMAGEKIT_URL_ENDPOINT must be a URL"),
+});
+
+export function getImageKitEnv() {
+  return imageKitEnvSchema.parse(process.env);
+}
