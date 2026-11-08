@@ -18,11 +18,14 @@ export default async function MainCoreLayout({
 }) {
   await connection();
   const session = await requireAuth();
-
+  // console.log(session.user);
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <AuthenticatedShell email={session.user.email} name={session.user.name}>
+        <AuthenticatedShell
+          image={session.user.image}
+          email={session.user.email}
+          name={session.user.name}>
           {children}
         </AuthenticatedShell>
       </body>
